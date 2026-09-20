@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  /* ألوان المنصة — مستوحاة من التصميم المرجعي (خلفية فاتحة + برتقالي + تيل) */
+  --color-cream: #fefcfc;
+  --color-brand-amber: #ffa41c;
+  --color-brand-amber-dark: #f08a00;
+  --color-brand-amber-soft: #fff4e2;
+  --color-brand-teal: #108474;
+  --color-brand-teal-dark: #0b6a5d;
+  --color-brand-teal-soft: #e9f5f3;
+  --color-ink: #21272b;
+  --color-muted: #5a5a5a;
+
+  --font-sans: var(--font-cairo), "Segoe UI", Tahoma, Arial, sans-serif;
+
+  --shadow-soft: 0 10px 40px rgba(33, 39, 43, 0.08);
+  --shadow-lift: 0 18px 50px rgba(33, 39, 43, 0.16);
+  --shadow-glow-amber: 0 12px 30px rgba(255, 164, 28, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: #ffd699;
+  color: #21272b;
+}
