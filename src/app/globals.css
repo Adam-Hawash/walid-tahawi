@@ -35,3 +35,35 @@ body {
   background-color: #ffd699;
   color: #21272b;
 }
+
+/* (2026-و75-C) أنيميشن شاشة تحميل الصيدلية — ندمة متدرجة للإيموجيز واللوجو */
+@keyframes wt-load-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+.wt-load-bounce {
+  animation: wt-load-bounce 0.9s ease-in-out infinite;
+}
+.wt-load-delay-1 {
+  animation-delay: 0.12s;
+}
+.wt-load-delay-2 {
+  animation-delay: 0.24s;
+}
+@keyframes wt-load-drop {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-6deg);
+  }
+}
+.wt-load-drop {
+  animation: wt-load-drop 1.4s ease-in-out infinite;
+}
