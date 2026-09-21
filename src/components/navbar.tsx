@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Globe, GraduationCap, Menu, X, Sparkles } from "lucide-react";
+import { GraduationCap, Menu, X, Sparkles } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { useSiteConfig } from "@/lib/config";
 import { SITE_CONTENT } from "@/lib/content";
 
 type Lang = "ar" | "en";
 
-// زرار تبديل اللغة — نفس ستايل أزرار النافيبار (44px تاتش تارجت)
+// سويتش اللغة بحبتين (EN | عربي) — نفس ستايل منصة د. شيماء بالظبط (و73):
+// كونتينر كبسولة بحدود وخلفية محايدة + الحبة المفعّلة بلون البراند — الحبة
+// المفعّلة متعلم عليها بـ aria-pressed — الوضع الموبايل بياخد العرض كامل
+// (نفس بادنج p-0.5/py-1 بتاع المرجع — مبالغة بسيطة py-1.5 في الموبايل بس
+// عشان هدف اللمس يفضل معقول)
 function LangToggle({
   lang,
   setLang,
@@ -18,21 +22,37 @@ function LangToggle({
   setLang: (l: Lang) => void;
   fullWidth?: boolean;
 }) {
+  // ملاحظة: منصة وليد مفيهاش توكنز shadcn (border/primary/muted-foreground) —
+  // فبنستخدم المقابل بتاعها: border-black/10 + bg-black/5 بدل bg-muted/60،
+  // bg-brand-teal + text-white بدل bg-primary + text-primary-foreground،
+  // text-muted hover:text-ink بدل text-muted-foreground hover:text-foreground
+  const containerCls =
+    "mt-3 items-center rounded-full border border-black/10 bg-black/5 p-0.5 text-[11px] font-bold " +
+    (fullWidth ? "flex w-full" : "inline-flex");
+  const btnCls =
+    "rounded-full transition-colors cursor-pointer " +
+    (fullWidth ? "flex-1 px-4 py-1.5 " : "px-2.5 py-1 ");
+  const onCls = "bg-brand-teal text-white shadow-sm";
+  const offCls = "text-muted hover:text-ink";
   return (
-    <button
-      type="button"
-      onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-      aria-label={lang === "ar" ? "Switch to English" : "التبديل إلى العربية"}
-      title={lang === "ar" ? "Switch to English" : "التبديل إلى العربية"}
-      className={
-        fullWidth
-          ? "mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full border-2 border-brand-teal bg-white px-6 text-base font-bold text-brand-teal transition-colors hover:bg-brand-teal-soft"
-          : "inline-flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full border border-black/10 bg-white px-3 text-sm font-extrabold text-ink transition-colors hover:bg-brand-amber-soft"
-      }
-    >
-      <Globe className="h-4 w-4 text-brand-teal" aria-hidden />
-      {lang === "ar" ? "EN" : "ع"}
-    </button>
+    <div className={containerCls} role="group" aria-label="Language / اللغة">
+      <button
+        type="button"
+        onClick={() => setLang("en")}
+        aria-pressed={lang === "en"}
+        className={btnCls + (lang === "en" ? onCls : offCls)}
+      >
+        EN
+      </button>
+      <button
+        type="button"
+        onClick={() => setLang("ar")}
+        aria-pressed={lang === "ar"}
+        className={btnCls + (lang === "ar" ? onCls : offCls)}
+      >
+        عربي
+      </button>
+    </div>
   );
 }
 
