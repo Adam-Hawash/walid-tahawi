@@ -1,13 +1,18 @@
-import { ArrowDown, BadgeCheck, MessageCircle, Sparkles } from "lucide-react";
-import { WHATSAPP_LINK } from "@/lib/site";
+"use client";
 
-const HIGHLIGHTS = [
-  "شرح مبسّط وواضح",
-  "متابعة لكل طالب",
-  "نتائج تتكلم عن نفسها",
-];
+import { ArrowDown, BadgeCheck, MessageCircle, Sparkles } from "lucide-react";
+import { useLang } from "@/lib/i18n";
+import { useSiteConfig } from "@/lib/config";
+import { SITE_CONTENT } from "@/lib/content";
 
 export default function Hero() {
+  const { t } = useLang();
+  const { tr, val } = useSiteConfig();
+  const { hero } = SITE_CONTENT;
+
+  // لينك الواتساب بيتظبط من الكونفج (رقم الأدمن لو متغير، وإلا الافتراضي)
+  const whatsappLink = `https://wa.me/${val("whatsapp_number", "201000000000")}`;
+
   return (
     <section id="home" className="relative overflow-hidden scroll-mt-24">
       {/* خلفية مزخرفة ناعمة — بلوبات بلون البرتقالي والتيل */}
@@ -22,16 +27,16 @@ export default function Hero() {
 
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 sm:pt-16 lg:grid-cols-2 lg:gap-8 lg:px-8 lg:pb-24 lg:pt-20">
         {/* النص الرئيسي */}
-        <div className="text-center lg:text-right">
+        <div className="text-center lg:text-start">
           <span className="inline-flex min-h-11 items-center gap-2 rounded-full border border-brand-amber/30 bg-brand-amber-soft px-4 text-sm font-bold text-brand-amber-dark">
             <Sparkles className="h-4 w-4" aria-hidden />
-            منصة وليد التحاوي التعليمية
+            {tr("hero_badge", hero.badge)}
           </span>
 
           <h1 className="mt-5 text-4xl font-black leading-[1.25] tracking-tight sm:text-5xl lg:text-[3.4rem] lg:leading-[1.2]">
-            رحلة التفوق الدراسي
+            {tr("hero_title", hero.title)}
             <span className="relative mx-2 inline-block text-brand-teal">
-              تبدأ من هنا
+              {tr("hero_title_highlight", hero.titleHighlight)}
               <span
                 aria-hidden
                 className="absolute inset-x-0 -bottom-1 h-3 -z-10 rounded-full bg-brand-amber/40"
@@ -40,9 +45,7 @@ export default function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted lg:mx-0">
-            شرح مبسّط وممتع، متابعة مستمرة لكل طالب، وامتحانات تدريبية على نفس
-            نمط الامتحانات الحقيقية — كل ده في مكان واحد وبيوصلك لأعلى الدرجات
-            بثقة.
+            {tr("hero_paragraph", hero.paragraph)}
           </p>
 
           {/* زراير الهيرو */}
@@ -52,31 +55,31 @@ export default function Hero() {
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-l from-brand-amber to-brand-amber-dark px-8 text-base font-bold text-white shadow-glow-amber transition-transform hover:scale-[1.04] active:scale-95"
             >
               <ArrowDown className="h-5 w-5" aria-hidden />
-              استكشف الكورسات
+              {tr("hero_btn_primary", hero.btnPrimary)}
             </a>
             <a
-              href={WHATSAPP_LINK}
+              href={whatsappLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-brand-teal bg-white px-8 text-base font-bold text-brand-teal transition-colors hover:bg-brand-teal-soft"
             >
               <MessageCircle className="h-5 w-5" aria-hidden />
-              تواصل واتساب
+              {tr("hero_btn_secondary", hero.btnSecondary)}
             </a>
           </div>
 
           {/* ميزات سريعة */}
           <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 lg:justify-start">
-            {HIGHLIGHTS.map((item) => (
+            {hero.highlights.map((item, i) => (
               <li
-                key={item}
+                key={item.en}
                 className="flex items-center gap-1.5 text-sm font-semibold text-ink/75"
               >
                 <BadgeCheck
                   className="h-5 w-5 text-brand-teal"
                   aria-hidden
                 />
-                {item}
+                {tr(`hero_highlight_${i + 1}`, item)}
               </li>
             ))}
           </ul>
@@ -90,7 +93,7 @@ export default function Hero() {
           />
           <img
             src="/images/hero-teacher.webp"
-            alt="المستر وليد التحاوي — معلم شاب مبتسم يرحب بطلاب المنصة"
+            alt={t(hero.imageAlt.ar, hero.imageAlt.en)}
             width={900}
             height={900}
             loading="eager"
@@ -104,9 +107,13 @@ export default function Hero() {
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-amber-soft text-brand-amber-dark">
               <Sparkles className="h-5 w-5" aria-hidden />
             </span>
-            <div className="text-right">
-              <p className="text-sm font-extrabold">شروح مبسّطة</p>
-              <p className="text-xs text-muted">كل درس خطوة للأمام</p>
+            <div className="text-start">
+              <p className="text-sm font-extrabold">
+                {tr("hero_float1_title", hero.float1Title)}
+              </p>
+              <p className="text-xs text-muted">
+                {tr("hero_float1_sub", hero.float1Sub)}
+              </p>
             </div>
           </div>
 
@@ -115,9 +122,13 @@ export default function Hero() {
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal-soft text-brand-teal">
               <BadgeCheck className="h-5 w-5" aria-hidden />
             </span>
-            <div className="text-right">
-              <p className="text-sm font-extrabold">متابعة مستمرة</p>
-              <p className="text-xs text-muted">لسة عندك دايمًا</p>
+            <div className="text-start">
+              <p className="text-sm font-extrabold">
+                {tr("hero_float2_title", hero.float2Title)}
+              </p>
+              <p className="text-xs text-muted">
+                {tr("hero_float2_sub", hero.float2Sub)}
+              </p>
             </div>
           </div>
         </div>

@@ -1,43 +1,63 @@
-import { Facebook, MessageCircle, Phone } from "lucide-react";
-import {
-  FACEBOOK_URL,
-  PHONE_DISPLAY,
-  PHONE_LINK,
-  WHATSAPP_LINK,
-  WORKING_HOURS,
-} from "@/lib/site";
+"use client";
 
-const CHANNELS = [
-  {
-    title: "واتساب",
-    desc: "ابعتلنا رسالة وسنرد عليك في أسرع وقت ممكن.",
-    cta: "ابدأ المحادثة",
-    href: WHATSAPP_LINK,
-    external: true,
-    icon: MessageCircle,
-    iconClass: "bg-brand-teal-soft text-brand-teal",
-  },
-  {
-    title: "تليفون",
-    desc: `كلمنا مباشرة على الرقم التالي خلال ${WORKING_HOURS}.`,
-    cta: PHONE_DISPLAY,
-    href: PHONE_LINK,
-    external: false,
-    icon: Phone,
-    iconClass: "bg-brand-amber-soft text-brand-amber-dark",
-  },
-  {
-    title: "فيسبوك",
-    desc: "تابع صفحتنا لأخبار المنصة والمواعيد المهمة أول بأول.",
-    cta: "افتح الصفحة",
-    href: FACEBOOK_URL,
-    external: true,
-    icon: Facebook,
-    iconClass: "bg-brand-teal-soft text-brand-teal-dark",
-  },
-];
+import { Facebook, MessageCircle, Phone } from "lucide-react";
+import { useSiteConfig } from "@/lib/config";
+import { SITE_CONTENT } from "@/lib/content";
 
 export default function Contact() {
+  const { tr, val } = useSiteConfig();
+  const { contact } = SITE_CONTENT;
+
+  // أرقام التواصل من الكونفج (صفحة الأدمن) أو الافتراضي
+  const whatsappNumber = val("whatsapp_number", "201000000000");
+  const phoneNumber = val("contact_phone", "201000000000");
+  const phoneDisplay = val("contact_phone_display", "010 0000 0000");
+  const facebookUrl = val("facebook_url", "https://www.facebook.com/");
+
+  const whatsappLink = `https://wa.me/${whatsappNumber}`;
+  const phoneLink = `tel:+${phoneNumber}`;
+
+  // مواعيد العمل بتتبدل مكان {hours} في النصوص
+  const workingHours = tr("contact_working_hours", contact.workingHours);
+  const phoneDesc = tr("contact_phone_desc", contact.phoneDesc).replace(
+    "{hours}",
+    workingHours
+  );
+  const bookingText = tr("contact_booking_text", contact.bookingText).replace(
+    "{hours}",
+    workingHours
+  );
+
+  const CHANNELS = [
+    {
+      title: tr("contact_whatsapp_title", contact.whatsappTitle),
+      desc: tr("contact_whatsapp_desc", contact.whatsappDesc),
+      cta: tr("contact_whatsapp_cta", contact.whatsappCta),
+      href: whatsappLink,
+      external: true,
+      icon: MessageCircle,
+      iconClass: "bg-brand-teal-soft text-brand-teal",
+    },
+    {
+      title: tr("contact_phone_title", contact.phoneTitle),
+      desc: phoneDesc,
+      cta: phoneDisplay,
+      href: phoneLink,
+      external: false,
+      icon: Phone,
+      iconClass: "bg-brand-amber-soft text-brand-amber-dark",
+    },
+    {
+      title: tr("contact_facebook_title", contact.facebookTitle),
+      desc: tr("contact_facebook_desc", contact.facebookDesc),
+      cta: tr("contact_facebook_cta", contact.facebookCta),
+      href: facebookUrl,
+      external: true,
+      icon: Facebook,
+      iconClass: "bg-brand-teal-soft text-brand-teal-dark",
+    },
+  ];
+
   return (
     <section
       id="contact"
@@ -47,14 +67,13 @@ export default function Contact() {
         {/* عنوان القسم */}
         <div className="text-center">
           <span className="inline-flex min-h-9 items-center rounded-full bg-brand-teal-soft px-4 text-sm font-bold text-brand-teal-dark">
-            تواصل
+            {tr("contact_badge", contact.badge)}
           </span>
           <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-            تواصل معنا
+            {tr("contact_title", contact.title)}
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted">
-            عندك أي سؤال عن الكورسات أو الحجز؟ فريقنا جاهز يرد عليك في أي وقت
-            ويوصلك لكل جديد.
+            {tr("contact_subtitle", contact.subtitle)}
           </p>
         </div>
 
@@ -85,30 +104,29 @@ export default function Contact() {
 
         {/* شريط الحجز عبر الهاتف — زي قسم الطلب عبر الهاتف في المرجع */}
         <div className="mt-14 overflow-hidden rounded-[2.5rem] bg-gradient-to-l from-brand-teal-dark to-brand-teal shadow-lift">
-          <div className="flex flex-col items-center gap-6 px-6 py-10 text-center sm:px-10 md:flex-row md:justify-between md:text-right">
+          <div className="flex flex-col items-center gap-6 px-6 py-10 text-center sm:px-10 md:flex-row md:justify-between md:text-start">
             <div>
               <h3 className="text-2xl font-black text-white sm:text-3xl">
-                الحجز عبر الهاتف
+                {tr("contact_booking_title", contact.bookingTitle)}
               </h3>
               <p className="mt-2 max-w-xl leading-relaxed text-white/85">
-                لو حابب تحجز مكانك أو تستفسر عن المجموعات، كلمنا بين{" "}
-                {WORKING_HOURS} و هنرد عليك فورًا.
+                {bookingText}
               </p>
             </div>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-5">
               <a
-                href={PHONE_LINK}
+                href={phoneLink}
                 dir="ltr"
                 className="text-3xl font-black tracking-wider text-white transition-opacity hover:opacity-85"
               >
-                {PHONE_DISPLAY}
+                {phoneDisplay}
               </a>
               <a
-                href={PHONE_LINK}
+                href={phoneLink}
                 className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-8 text-base font-extrabold text-brand-teal-dark shadow-lift transition-transform hover:scale-[1.04] active:scale-95"
               >
                 <Phone className="h-5 w-5" aria-hidden />
-                اتصل الآن
+                {tr("contact_call_now", contact.callNow)}
               </a>
             </div>
           </div>

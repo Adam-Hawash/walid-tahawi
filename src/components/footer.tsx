@@ -1,35 +1,28 @@
+"use client";
+
 import {
   Facebook,
   GraduationCap,
   MessageCircle,
   Phone,
 } from "lucide-react";
-import {
-  FACEBOOK_URL,
-  PHONE_DISPLAY,
-  PHONE_LINK,
-  WHATSAPP_LINK,
-} from "@/lib/site";
-
-const QUICK_LINKS = [
-  { href: "#home", label: "الرئيسية" },
-  { href: "#courses", label: "الكورسات" },
-  { href: "#grades", label: "الصفوف الدراسية" },
-  { href: "#about", label: "عن المستر" },
-  { href: "#contact", label: "تواصل معنا" },
-];
-
-const GRADES = [
-  "الأول الإعدادي",
-  "الثاني الإعدادي",
-  "الثالث الإعدادي",
-  "الأول الثانوي",
-  "الثاني الثانوي",
-  "الثالث الثانوي",
-];
+import { useSiteConfig } from "@/lib/config";
+import { SITE_CONTENT } from "@/lib/content";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { tr, val } = useSiteConfig();
+  const { footer, navbar, grades } = SITE_CONTENT;
+
+  const whatsappLink = `https://wa.me/${val("whatsapp_number", "201000000000")}`;
+  const phoneLink = `tel:+${val("contact_phone", "201000000000")}`;
+  const phoneDisplay = val("contact_phone_display", "010 0000 0000");
+  const facebookUrl = val("facebook_url", "https://www.facebook.com/");
+
+  const copyright = tr("footer_copyright", footer.copyright).replace(
+    "{year}",
+    String(year)
+  );
 
   return (
     // mt-auto بتخلي الفوتر لازق في آخر الشاشة حتى لو المحتوى قصير
@@ -43,35 +36,34 @@ export default function Footer() {
                 <GraduationCap className="h-6 w-6 text-white" strokeWidth={2.2} />
               </span>
               <span className="text-lg font-extrabold text-white">
-                منصة وليد التحاوي
+                {tr("footer_brand", footer.brand)}
               </span>
             </a>
             <p className="mt-4 leading-relaxed text-white/70">
-              مكانك الآمن لتتعلم وتفهم كل المواد بأسلوب مبسّط وممتع، وتوصل
-              لأعلى الدرجات وانت متطمن.
+              {tr("footer_about", footer.about)}
             </p>
             <div className="mt-5 flex items-center gap-3">
               <a
-                href={WHATSAPP_LINK}
+                href={whatsappLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="تواصل واتساب"
+                aria-label={tr("footer_whatsapp_label", footer.whatsappLabel)}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-amber"
               >
                 <MessageCircle className="h-5 w-5" aria-hidden />
               </a>
               <a
-                href={FACEBOOK_URL}
+                href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="صفحة الفيسبوك"
+                aria-label={tr("footer_facebook_label", footer.facebookLabel)}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-amber"
               >
                 <Facebook className="h-5 w-5" aria-hidden />
               </a>
               <a
-                href={PHONE_LINK}
-                aria-label="اتصل بنا"
+                href={phoneLink}
+                aria-label={tr("footer_contact_title", footer.contactTitle)}
                 className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-brand-amber"
               >
                 <Phone className="h-5 w-5" aria-hidden />
@@ -80,16 +72,18 @@ export default function Footer() {
           </div>
 
           {/* روابط سريعة */}
-          <nav aria-label="روابط سريعة">
-            <h3 className="text-lg font-extrabold text-white">روابط سريعة</h3>
+          <nav aria-label={tr("footer_quick_links_title", footer.quickLinksTitle)}>
+            <h3 className="text-lg font-extrabold text-white">
+              {tr("footer_quick_links_title", footer.quickLinksTitle)}
+            </h3>
             <ul className="mt-4 flex flex-col gap-1">
-              {QUICK_LINKS.map((link) => (
+              {navbar.links.map((link, i) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
                     className="inline-flex min-h-10 items-center rounded-lg px-1 text-white/70 transition-colors hover:text-brand-amber"
                   >
-                    {link.label}
+                    {tr(`navbar_link_${i + 1}`, link.label)}
                   </a>
                 </li>
               ))}
@@ -97,18 +91,18 @@ export default function Footer() {
           </nav>
 
           {/* الصفوف الدراسية */}
-          <nav aria-label="الصفوف الدراسية">
+          <nav aria-label={tr("footer_grades_title", footer.gradesTitle)}>
             <h3 className="text-lg font-extrabold text-white">
-              الصفوف الدراسية
+              {tr("footer_grades_title", footer.gradesTitle)}
             </h3>
             <ul className="mt-4 flex flex-col gap-1">
-              {GRADES.map((grade) => (
-                <li key={grade}>
+              {grades.items.map((grade, i) => (
+                <li key={grade.id}>
                   <a
                     href="#grades"
                     className="inline-flex min-h-10 items-center rounded-lg px-1 text-white/70 transition-colors hover:text-brand-amber"
                   >
-                    {grade}
+                    {tr(`grade${i + 1}_name`, grade.name)}
                   </a>
                 </li>
               ))}
@@ -117,37 +111,39 @@ export default function Footer() {
 
           {/* تواصل معنا */}
           <div>
-            <h3 className="text-lg font-extrabold text-white">تواصل معنا</h3>
+            <h3 className="text-lg font-extrabold text-white">
+              {tr("footer_contact_title", footer.contactTitle)}
+            </h3>
             <ul className="mt-4 flex flex-col gap-3">
               <li>
                 <a
-                  href={PHONE_LINK}
+                  href={phoneLink}
                   className="flex min-h-11 items-center gap-3 text-white/70 transition-colors hover:text-brand-amber"
                 >
                   <Phone className="h-5 w-5 shrink-0" aria-hidden />
-                  <span dir="ltr">{PHONE_DISPLAY}</span>
+                  <span dir="ltr">{phoneDisplay}</span>
                 </a>
               </li>
               <li>
                 <a
-                  href={WHATSAPP_LINK}
+                  href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-3 text-white/70 transition-colors hover:text-brand-amber"
                 >
                   <MessageCircle className="h-5 w-5 shrink-0" aria-hidden />
-                  <span>واتساب المنصة</span>
+                  <span>{tr("footer_whatsapp_label", footer.whatsappLabel)}</span>
                 </a>
               </li>
               <li>
                 <a
-                  href={FACEBOOK_URL}
+                  href={facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex min-h-11 items-center gap-3 text-white/70 transition-colors hover:text-brand-amber"
                 >
                   <Facebook className="h-5 w-5 shrink-0" aria-hidden />
-                  <span>صفحة الفيسبوك</span>
+                  <span>{tr("footer_facebook_label", footer.facebookLabel)}</span>
                 </a>
               </li>
             </ul>
@@ -158,7 +154,7 @@ export default function Footer() {
       {/* شريط الحقوق */}
       <div className="border-t border-white/10">
         <p className="mx-auto w-full max-w-7xl px-4 py-5 text-center text-sm text-white/60 sm:px-6 lg:px-8">
-          © {year} منصة وليد التحاوي — جميع الحقوق محفوظة.
+          {copyright}
         </p>
       </div>
     </footer>

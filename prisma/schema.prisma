@@ -1,0 +1,22 @@
+// ============================================================
+// قاعدة بيانات المنصة — SQLite بسيطة لتخزين إعدادات المحتوى
+// (نفس النمط المثبت في مشروع zikola الشقيق)
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/walid.db"
+}
+
+// كل نص/قيمة في الموقع بتتخزن هنا كصف (key → value)
+// النصوص الثنائية بتتخزن كمفتاحين: مفتاح_ar ومفتاح_en
+model SiteConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
+}

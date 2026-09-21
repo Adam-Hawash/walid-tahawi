@@ -6,7 +6,10 @@ import {
   FileBarChart2,
   Lightbulb,
   UserCheck,
+  type LucideIcon,
 } from "lucide-react";
+import { useSiteConfig } from "@/lib/config";
+import { SITE_CONTENT } from "@/lib/content";
 
 // عدّاد أرقام بسيط — بيعد لما القسم يظهر على الشاشة
 function CountUp({
@@ -70,36 +73,18 @@ function CountUp({
   );
 }
 
-const FEATURES = [
-  {
-    icon: Lightbulb,
-    title: "شرح مبسّط",
-    desc: "كل درس بيشرح بأمثلة من الحياة اليومية لحد ما يثبت تمامًا.",
-  },
-  {
-    icon: UserCheck,
-    title: "متابعة فردية",
-    desc: "كل طالب بيتابع مستواه ونقطته أول بأول طول الفصل.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "امتحانات دورية",
-    desc: "اختبارات مستمرة بنفس نمط الامتحان الحقيقي عشان مفيش مفاجآت.",
-  },
-  {
-    icon: FileBarChart2,
-    title: "تقارير لأولياء الأمور",
-    desc: "ولي الأمر بيفضل متابع تقدم ابنه أول بأول من غير أي مجهود.",
-  },
-];
-
-const STATS = [
-  { end: 5000, suffix: "+", label: "طالب انضموا للمنصة" },
-  { end: 12, suffix: "+", label: "سنة خبرة في التدريس" },
-  { end: 98, suffix: "%", label: "نسبة نجاح بين طلابنا" },
+// أيقونات الميزات بالترتيب (بتتطابق مع FEATURES في المحتوى)
+const FEATURE_ICONS: LucideIcon[] = [
+  Lightbulb,
+  UserCheck,
+  ClipboardCheck,
+  FileBarChart2,
 ];
 
 export default function About() {
+  const { tr, val } = useSiteConfig();
+  const { about } = SITE_CONTENT;
+
   return (
     <section id="about" className="scroll-mt-24 py-16 sm:py-20">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -107,51 +92,56 @@ export default function About() {
           {/* النص */}
           <div>
             <span className="inline-flex min-h-9 items-center rounded-full bg-brand-teal-soft px-4 text-sm font-bold text-brand-teal-dark">
-              عن المنصة
+              {tr("about_badge", about.badge)}
             </span>
             <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-              هنا الطالب بيفهم…
-              <span className="text-brand-teal"> مش بس يحفظ</span>
+              {tr("about_title", about.title)}
+              <span className="text-brand-teal">
+                {" "}
+                {tr("about_title_highlight", about.titleHighlight)}
+              </span>
             </h2>
             <p className="mt-4 leading-loose text-muted">
-              منصة وليد التحاوي مش مجرد كورسات — دي بيئة تعليمية كاملة اتصممت
-              عشان الطالب يفهم من الأساس ويبني فوقه خطوة بخطوة، لحد ما يبقى جاهز
-              لأي امتحان وبكل ثقة.
+              {tr("about_p1", about.p1)}
             </p>
             <p className="mt-3 leading-loose text-muted">
-              هدفنا بسيط: نخلّي المذاكرة أسهل وأوضح، وندي كل طالب الدعم اللي
-              يخليه يحب المادة ويحقق أفضل نتيجة ممكنة.
+              {tr("about_p2", about.p2)}
             </p>
 
             {/* الميزات */}
             <ul className="mt-8 grid gap-4 sm:grid-cols-2">
-              {FEATURES.map((f) => (
-                <li
-                  key={f.title}
-                  className="flex items-start gap-3 rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5"
-                >
-                  <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-teal-soft text-brand-teal">
-                    <f.icon className="h-5 w-5" aria-hidden />
-                  </span>
-                  <div>
-                    <h3 className="font-extrabold">{f.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted">
-                      {f.desc}
-                    </p>
-                  </div>
-                </li>
-              ))}
+              {about.features.map((f, i) => {
+                const Icon = FEATURE_ICONS[i] ?? Lightbulb;
+                return (
+                  <li
+                    key={f.title.en}
+                    className="flex items-start gap-3 rounded-2xl bg-white p-4 shadow-soft ring-1 ring-black/5"
+                  >
+                    <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-teal-soft text-brand-teal">
+                      <Icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    <div>
+                      <h3 className="font-extrabold">
+                        {tr(`about_f${i + 1}_title`, f.title)}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-muted">
+                        {tr(`about_f${i + 1}_desc`, f.desc)}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
           {/* الإحصائيات */}
           <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1 lg:gap-6">
-            {STATS.map((stat) => (
+            {about.stats.map((stat, i) => (
               <CountUp
-                key={stat.label}
-                end={stat.end}
-                suffix={stat.suffix}
-                label={stat.label}
+                key={stat.label.en}
+                end={Number(val(`about_stat${i + 1}_value`, String(stat.value))) || 0}
+                suffix={val(`about_stat${i + 1}_suffix`, stat.suffix)}
+                label={tr(`about_stat${i + 1}_label`, stat.label)}
               />
             ))}
           </div>

@@ -1,22 +1,35 @@
+"use client";
+
 import {
   Atom,
+  Backpack,
   BookOpen,
   Calculator,
   GraduationCap,
+  NotebookPen,
   PencilRuler,
   Shapes,
+  type LucideIcon,
 } from "lucide-react";
+import { useSiteConfig } from "@/lib/config";
+import { SITE_CONTENT } from "@/lib/content";
 
-const GRADES = [
-  { name: "الأول الإعدادي", icon: BookOpen },
-  { name: "الثاني الإعدادي", icon: PencilRuler },
-  { name: "الثالث الإعدادي", icon: Shapes },
-  { name: "الأول الثانوي", icon: Atom },
-  { name: "الثاني الثانوي", icon: Calculator },
-  { name: "الثالث الثانوي", icon: GraduationCap },
+// أيقونات الصفوف بالترتيب — أول اتنين (رابعة وخمسة ابتدائي) الجداد
+const GRADE_ICONS: LucideIcon[] = [
+  NotebookPen,
+  Backpack,
+  BookOpen,
+  PencilRuler,
+  Shapes,
+  Atom,
+  Calculator,
+  GraduationCap,
 ];
 
 export default function GradeCategories() {
+  const { tr } = useSiteConfig();
+  const { grades } = SITE_CONTENT;
+
   return (
     <section
       id="grades"
@@ -26,44 +39,46 @@ export default function GradeCategories() {
         {/* عنوان القسم */}
         <div className="text-center">
           <span className="inline-flex min-h-9 items-center rounded-full bg-brand-teal-soft px-4 text-sm font-bold text-brand-teal-dark">
-            الصفوف الدراسية
+            {tr("grades_badge", grades.badge)}
           </span>
           <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-            تصفح حسب الصف
+            {tr("grades_title", grades.title)}
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted">
-            كورسات مصممة خصيصًا لكل صف دراسي — من أول الإعدادي لحد ثالثة
-            ثانوي، دايمًا في محتوى مناسب لمستواك.
+            {tr("grades_subtitle", grades.subtitle)}
           </p>
         </div>
 
-        {/* كروت الصفوف */}
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-6">
-          {GRADES.map((grade, i) => (
-            <a
-              key={grade.name}
-              href="#courses"
-              className="group flex min-h-44 flex-col items-center justify-center gap-3 rounded-3xl bg-cream p-4 text-center shadow-soft ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:bg-brand-amber-soft hover:shadow-lift"
-            >
-              <span
-                className={`flex h-14 w-14 items-center justify-center rounded-2xl text-white transition-transform duration-300 group-hover:scale-110 ${
-                  i % 2 === 0
-                    ? "bg-gradient-to-br from-brand-amber to-brand-amber-dark"
-                    : "bg-gradient-to-br from-brand-teal to-brand-teal-dark"
-                }`}
+        {/* كروت الصفوف — 8 صفوف من رابعة ابتدائي لحد ثالثة ثانوي */}
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6 lg:grid-cols-8">
+          {grades.items.map((grade, i) => {
+            const Icon = GRADE_ICONS[i] ?? BookOpen;
+            return (
+              <a
+                key={grade.id}
+                href="#courses"
+                className="group flex min-h-44 flex-col items-center justify-center gap-3 rounded-3xl bg-cream p-4 text-center shadow-soft ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:bg-brand-amber-soft hover:shadow-lift"
               >
-                <grade.icon className="h-7 w-7" strokeWidth={1.9} aria-hidden />
-              </span>
-              <div>
-                <h3 className="text-base font-extrabold sm:text-lg">
-                  {grade.name}
-                </h3>
-                <p className="mt-1 text-xs font-semibold text-muted transition-colors group-hover:text-brand-teal-dark">
-                  استكشف الكورسات
-                </p>
-              </div>
-            </a>
-          ))}
+                <span
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl text-white transition-transform duration-300 group-hover:scale-110 ${
+                    i % 2 === 0
+                      ? "bg-gradient-to-br from-brand-amber to-brand-amber-dark"
+                      : "bg-gradient-to-br from-brand-teal to-brand-teal-dark"
+                  }`}
+                >
+                  <Icon className="h-7 w-7" strokeWidth={1.9} aria-hidden />
+                </span>
+                <div>
+                  <h3 className="text-sm font-extrabold sm:text-base">
+                    {tr(`grade${i + 1}_name`, grade.name)}
+                  </h3>
+                  <p className="mt-1 text-xs font-semibold text-muted transition-colors group-hover:text-brand-teal-dark">
+                    {tr("grades_explore", grades.explore)}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>
